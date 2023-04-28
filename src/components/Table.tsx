@@ -6,6 +6,16 @@ type items = {
   [key: string]: string | number | boolean;
 };
 
+type cells = {
+  [key: string]: template
+};
+
+type template = (
+  value: string | number | boolean,
+  item: items,
+  arr: items[]
+) => string | number | boolean | ReactNode;
+
 type fields = {
   key: string;
   label?: string;
@@ -27,7 +37,7 @@ export default function Table({
   small,
   TableBusy,
   busy,
-  cell
+  cell,
 }: {
   items: items[];
   hover?: boolean;
@@ -39,7 +49,7 @@ export default function Table({
   small?: boolean;
   busy?: boolean;
   TableBusy?: ReactNode;
-  cell?:any
+  cell?: cells;
 }) {
   const [cField, setCField] = useState<fields[]>([]);
 
@@ -123,8 +133,7 @@ export default function Table({
                     cField.map((fieldItem, fieldIndex) => {
                       return (
                         <td key={fieldIndex}>
-                          {/* {item[fieldItem.key as keyof items]} */}
-                          {displayValue(fieldItem.key, item, fieldItem, arr)}
+                          { cell ? displayValueCell(displayValue(fieldItem.key, item, fieldItem, arr),fieldItem.key, item, fieldItem, arr , cell ) : displayValue(fieldItem.key, item, fieldItem, arr) }
                         </td>
                       );
                     })}
@@ -144,8 +153,24 @@ function displayValue(
   fieldItem: fields,
   arr: items[]
 ) {
-  if(fieldItem.formatter){
-    return fieldItem.formatter(item[key],item,arr)
+  if (fieldItem.formatter) {
+    return fieldItem.formatter(item[key], item, arr);
   }
   return item[key];
 }
+
+function displayValueCell(
+  value:any,
+  key: string,
+  item: items,
+  fieldItem: fields,
+  arr: items[],
+  cell:cells
+) {
+if(cell[key]){
+  return cell[key](value, item, arr)
+}
+return value
+
+}
+
