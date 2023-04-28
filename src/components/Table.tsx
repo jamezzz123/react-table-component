@@ -1,11 +1,19 @@
-import { useEffect, useState } from "react";
-import { keys, capitalize, escape, startCase } from "lodash";
+import { useEffect, useState, FC, ReactNode } from "react";
+import { keys, startCase } from "lodash";
 import classNames from "classnames";
 
 type items = {
-  age: number;
-  first_name: string;
-  last_name: string;
+  [key: string]: string | number | boolean;
+};
+
+type fields = {
+  key: string;
+  label?: string;
+  formatter?: (
+    value: string | number | boolean,
+    item: items,
+    arr: items[]
+  ) => string | number | boolean;
 };
 
 export default function Table({
@@ -14,21 +22,55 @@ export default function Table({
   striped,
   dark,
   fields,
+  responsive,
+  bordered,
+  small,
+  TableBusy,
+  busy,
+  cell
 }: {
   items: items[];
   hover?: boolean;
   striped?: boolean;
-  fields?: string[];
+  fields?: fields[] | string[];
   dark?: boolean;
+  responsive?: boolean;
+  bordered?: boolean;
+  small?: boolean;
+  busy?: boolean;
+  TableBusy?: ReactNode;
+  cell?:any
 }) {
-  const [cField, setCField] = useState<string[]>([]);
+  const [cField, setCField] = useState<fields[]>([]);
 
+  console.log(cell);
   useEffect(() => {
-    if (fields) {
-      setCField(fields);
-    } else if (items.length > 0) {
+    // if (fields) {
+    //   setCField(fields);
+    // } else if (items.length > 0) {
+    //   const arr = keys(items[0]);
+    //   setCField(arr);
+    // }
+
+    if (!fields) {
       const arr = keys(items[0]);
-      setCField(arr);
+      setCField(formatFieldFromString(arr));
+    } else {
+      const result = fields.map((item) => {
+        if (typeof item === "string") {
+          return {
+            label: startCase(item),
+            key: item,
+          };
+        } else if (typeof item === "object") {
+          return {
+            label: item.label ? item.label : startCase(item.key),
+            ...item,
+          };
+        }
+      }) as fields[];
+
+      setCField(result);
     }
   }, [items, fields]);
 
@@ -36,40 +78,74 @@ export default function Table({
     return startCase(string);
   }
 
+  function formatFieldFromString(arr: string[]): fields[] {
+    return arr.map((item) => ({
+      key: item,
+      label: FormatFieldTitle(item),
+    }));
+  }
+
   return (
-    <div className="table-responsive">
+    <div
+      className={classNames({
+        "table-responsive": responsive,
+      })}
+    >
       <table
         className={classNames({
           table: true,
           "table-hover": hover,
           "table-striped": striped,
           "table-dark": dark,
+          "table-bordered": bordered,
+          "table-small": small,
         })}
       >
         <thead>
           <tr>
             {cField.map((item, index) => (
               <th scope="col" key={index}>
-                {FormatFieldTitle(item)}
+                {item.label}
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {items.map((item, index, itemArr) => {
-            return (
-              <tr key={index}>
-                {cField.length > 0 &&
-                  cField.map((fieldItem, fieldIndex) => {
-                    return (
-                      <td key={fieldIndex}>{item[fieldItem as keyof items]}</td>
-                    );
-                  })}
-              </tr>
-            );
-          })}
+          {TableBusy && busy ? (
+            <tr>
+              <td colSpan={cField.length}>{TableBusy}</td>
+            </tr>
+          ) : (
+            items.map((item, index, arr) => {
+              return (
+                <tr key={index}>
+                  {cField.length > 0 &&
+                    cField.map((fieldItem, fieldIndex) => {
+                      return (
+                        <td key={fieldIndex}>
+                          {/* {item[fieldItem.key as keyof items]} */}
+                          {displayValue(fieldItem.key, item, fieldItem, arr)}
+                        </td>
+                      );
+                    })}
+                </tr>
+              );
+            })
+          )}
         </tbody>
       </table>
     </div>
   );
+}
+
+function displayValue(
+  key: string,
+  item: items,
+  fieldItem: fields,
+  arr: items[]
+) {
+  if(fieldItem.formatter){
+    return fieldItem.formatter(item[key],item,arr)
+  }
+  return item[key];
 }

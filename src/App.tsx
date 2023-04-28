@@ -6,9 +6,12 @@ import Table from "./components/Table";
 
 function App() {
   const [count, setCount] = useState(0);
+  type items = {
+    [key: string]: string | number | boolean;
+  };
 
   const fields = ["first_name", "last_name", "age"];
-  const items = [
+  const items:items[] = [
     {
       isActive: true,
       age: 40,
@@ -18,11 +21,11 @@ function App() {
     { isActive: false, age: 21, first_name: "Larsen", last_name: "Shaw" },
     { isActive: false, age: 89, first_name: "Geneva", last_name: "Wilson" },
     { isActive: true, age: 38, first_name: "Jami", last_name: "Carney" },
-  ];
+  ] ;
   return (
     <>
       <div className="container">
-        <Table hover dark striped fields={fields} items={items} />
+        <Table TableBusy={(<h1 className="text-center">Loading</h1>)} busy={true}  hover  fields={fields} items={items} />
       </div>
     </>
   );
