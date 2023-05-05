@@ -1,12 +1,6 @@
-import { useState, useEffect } from "react";
 import Table from "./components/Table";
-import { first } from "lodash";
-// import reactLogo from "./assets/react.svg";
-// import viteLogo from "/vite.svg";
-// import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
   type items = {
     [key: string]: string | number | boolean;
   };
@@ -24,7 +18,7 @@ function App() {
     {
       key: "full_name",
       label: "Full Name",
-      formatter: (value: string | number, item: any): any => {
+      formatter: (_value: string | number, item: any): any => {
         return item.first_name + " " + item.last_name;
       },
     },
@@ -62,7 +56,7 @@ function App() {
             },
             full_name: (value: string | number | boolean, item: any) => {
               return <a href={value as string}>{value}</a>
-            }
+            },
           }}
         />
       </div>

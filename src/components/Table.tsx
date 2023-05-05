@@ -129,7 +129,7 @@ export default function Table({
             items.map((item, index, arr) => {
               return (
                 <tr key={index}>
-                  {cField.length > 0 &&
+                  {
                     cField.map((fieldItem, fieldIndex) => {
                       return (
                         <td key={fieldIndex}>
