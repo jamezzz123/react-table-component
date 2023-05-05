@@ -50,6 +50,7 @@ function App() {
           hover
           fields={fields}
           items={items}
+          onRowClicked={(e) => console.log(e)}
           cell={{
             first_name: (value: string | number | boolean) => {
               return <button className="btn btn-primary">{value}</button>;

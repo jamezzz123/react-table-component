@@ -7,7 +7,7 @@ type items = {
 };
 
 type cells = {
-  [key: string]: template
+  [key: string]: template;
 };
 
 type template = (
@@ -38,6 +38,7 @@ export default function Table({
   TableBusy,
   busy,
   cell,
+  onRowClicked,
 }: {
   items: items[];
   hover?: boolean;
@@ -48,6 +49,7 @@ export default function Table({
   bordered?: boolean;
   small?: boolean;
   busy?: boolean;
+  onRowClicked?: (value: items) => unknown;
   TableBusy?: ReactNode;
   cell?: cells;
 }) {
@@ -95,6 +97,41 @@ export default function Table({
     }));
   }
 
+  function displayRow(items: items[]): ReactNode {
+    if (items.length > 0) {
+      return items.map((item, index, arr) => {
+        return (
+          <tr onClick={() => onRowClicked(item)} key={index}>
+            {cField.map((fieldItem, fieldIndex) => {
+              return (
+                <td key={fieldIndex}>
+                  {cell
+                    ? displayValueCell(
+                        displayValue(fieldItem.key, item, fieldItem, arr),
+                        fieldItem.key,
+                        item,
+                        fieldItem,
+                        arr,
+                        cell
+                      )
+                    : displayValue(fieldItem.key, item, fieldItem, arr)}
+                </td>
+              );
+            })}
+          </tr>
+        );
+      });
+    } else {
+      return (
+        <tr>
+          <td colSpan={4}>
+            <h1 className="text-center">No data to display</h1>;
+          </td>
+        </tr>
+      ) 
+    }
+  }
+
   return (
     <div
       className={classNames({
@@ -126,20 +163,7 @@ export default function Table({
               <td colSpan={cField.length}>{TableBusy}</td>
             </tr>
           ) : (
-            items.map((item, index, arr) => {
-              return (
-                <tr key={index}>
-                  {
-                    cField.map((fieldItem, fieldIndex) => {
-                      return (
-                        <td key={fieldIndex}>
-                          { cell ? displayValueCell(displayValue(fieldItem.key, item, fieldItem, arr),fieldItem.key, item, fieldItem, arr , cell ) : displayValue(fieldItem.key, item, fieldItem, arr) }
-                        </td>
-                      );
-                    })}
-                </tr>
-              );
-            })
+            displayRow(items)
           )}
         </tbody>
       </table>
@@ -160,17 +184,15 @@ function displayValue(
 }
 
 function displayValueCell(
-  value:any,
+  value: any,
   key: string,
   item: items,
   fieldItem: fields,
   arr: items[],
-  cell:cells
+  cell: cells
 ) {
-if(cell[key]){
-  return cell[key](value, item, arr)
+  if (cell[key]) {
+    return cell[key](value, item, arr);
+  }
+  return value;
 }
-return value
-
-}
-
