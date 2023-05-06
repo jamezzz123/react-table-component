@@ -1,6 +1,9 @@
 import { useEffect, useState, FC, ReactNode } from "react";
-import { keys, startCase } from "lodash";
+import { keys, startCase, orderBy } from "lodash";
 import classNames from "classnames";
+import upArrow from "../assets/reshot-icon-arrow-up.svg";
+import downArrow from "../assets/reshot-icon-down-arrow.svg";
+import './table.css'
 
 type items = {
   [key: string]: string | number | boolean;
@@ -24,6 +27,7 @@ type fields = {
     item: items,
     arr: items[]
   ) => string | number | boolean;
+  sortable?: boolean;
 };
 
 export default function Table({
@@ -54,8 +58,9 @@ export default function Table({
   cell?: cells;
 }) {
   const [cField, setCField] = useState<fields[]>([]);
+  const [sortKey, setSortKey] = useState<string>("");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
-  console.log(cell);
   useEffect(() => {
     // if (fields) {
     //   setCField(fields);
@@ -128,8 +133,37 @@ export default function Table({
             <h1 className="text-center">No data to display</h1>;
           </td>
         </tr>
-      ) 
+      );
     }
+  }
+
+  function toggleSorting(key: string) {
+    if (sortOrder === "asc") {
+      setSortKey(key);
+      setSortOrder("desc");
+    } else {
+      setSortKey(key);
+      setSortOrder("asc");
+    }
+  }
+
+  function computeAriaSort(key:string): 'descending' | 'ascending' | 'other'  | 'none'{
+    if(sortKey  === key){
+      if(sortOrder === 'asc'){
+        return 'descending'
+      }else{
+        return 'ascending'
+      }
+    }else{
+      return 'other'
+    }
+  }
+
+  function computedItem(item: items[]) {
+    if (sortKey === "") {
+      return item;
+    }
+    return orderBy(items, sortKey, sortOrder);
   }
 
   return (
@@ -151,8 +185,20 @@ export default function Table({
         <thead>
           <tr>
             {cField.map((item, index) => (
-              <th scope="col" key={index}>
+              <th
+                scope="col"
+                key={index}
+                onClick={() => item.sortable ? toggleSorting(item.key) : ''}
+                aria-sort={item.sortable ? computeAriaSort(item.key) : 'none'}
+              >
                 {item.label}
+
+                {/* <span>
+                  <img src={downArrow} alt="" />
+                </span>
+                <span>
+                  <img src={upArrow} alt="" />
+                </span> */}
               </th>
             ))}
           </tr>
@@ -163,7 +209,7 @@ export default function Table({
               <td colSpan={cField.length}>{TableBusy}</td>
             </tr>
           ) : (
-            displayRow(items)
+            displayRow(computedItem(items))
           )}
         </tbody>
       </table>

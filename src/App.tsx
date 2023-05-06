@@ -11,6 +11,7 @@ function App() {
     {
       key: "age",
       label: "My Age",
+      sortable: true,
       formatter: (value: string | number): number => {
         return Number(value) + 1000;
       },
