@@ -1,8 +1,6 @@
 import { useEffect, useState, FC, ReactNode } from "react";
 import { keys, startCase, orderBy } from "lodash";
 import classNames from "classnames";
-import upArrow from "../assets/reshot-icon-arrow-up.svg";
-import downArrow from "../assets/reshot-icon-down-arrow.svg";
 import './table.css'
 
 type items = {
@@ -188,7 +186,7 @@ export default function Table({
               <th
                 scope="col"
                 key={index}
-                onClick={() => item.sortable ? toggleSorting(item.key) : ''}
+                onClick={() => item.sortable ? toggleSorting(item.key) : toggleSorting('')}
                 aria-sort={item.sortable ? computeAriaSort(item.key) : 'none'}
               >
                 {item.label}
