@@ -1,7 +1,7 @@
-import { useEffect, useState, FC, ReactNode } from "react";
+import { useEffect, useState, ReactNode } from "react";
 import { keys, startCase, orderBy } from "lodash";
 import classNames from "classnames";
-import './table.css'
+import '../scss/custom.scss'
 
 type items = {
   [key: string]: string | number | boolean;
@@ -45,7 +45,7 @@ export default function Table({
   items: items[];
   hover?: boolean;
   striped?: boolean;
-  fields?: fields[] | string[];
+  fields?:  (string | fields )[];
   dark?: boolean;
   responsive?: boolean;
   bordered?: boolean;
@@ -104,7 +104,7 @@ export default function Table({
     if (items.length > 0) {
       return items.map((item, index, arr) => {
         return (
-          <tr onClick={() => onRowClicked(item)} key={index}>
+          <tr onClick={() => onRowClicked ? onRowClicked(item) : '' } key={index}>
             {cField.map((fieldItem, fieldIndex) => {
               return (
                 <td key={fieldIndex}>
@@ -139,9 +139,11 @@ export default function Table({
     if (sortOrder === "asc") {
       setSortKey(key);
       setSortOrder("desc");
-    } else {
+    } else if (sortOrder === "desc") {
       setSortKey(key);
       setSortOrder("asc");
+    }else {
+      setSortKey("");
     }
   }
 
@@ -231,7 +233,7 @@ function displayValueCell(
   value: any,
   key: string,
   item: items,
-  fieldItem: fields,
+  _fieldItem: fields,
   arr: items[],
   cell: cells
 ) {

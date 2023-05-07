@@ -23,7 +23,7 @@ function App() {
         return item.first_name + " " + item.last_name;
       },
     },
-  ];
+  ] as any;
   const items: items[] = [
     {
       isActive: true,
@@ -49,6 +49,8 @@ function App() {
           TableBusy={<h1 className="text-center">Loading</h1>}
           busy={false}
           hover
+          striped
+          bordered
           fields={fields}
           items={items}
           onRowClicked={(e) => console.log(e)}
@@ -56,7 +58,7 @@ function App() {
             first_name: (value: string | number | boolean) => {
               return <button className="btn btn-primary">{value}</button>;
             },
-            full_name: (value: string | number | boolean, item: any) => {
+            full_name: (value: string | number | boolean, _item: any) => {
               return <a href={value as string}>{value}</a>
             },
           }}
