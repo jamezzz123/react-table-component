@@ -1,7 +1,7 @@
 {
   "name": "react-bootstrap-vue-table",
   "description": "A simple table component in react inspired by bootstrapVue table component ",
-  "private": true,
+  "private": false,
   "version": "1.0.0",
   "keywords": [
     "react",

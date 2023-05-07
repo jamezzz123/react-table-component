@@ -14,11 +14,21 @@ export default defineConfig({
     lib: {
       entry: path.resolve('src', 'index.ts'),
       name: 'ReactTableComponent',
-      formats: ['es', 'umd'],
+      // formats: ['es', 'umd'],
       fileName: (format) => `react-table-component.${format}.js`,
     },
     // rollupOptions: {
     //   external: [...Object.keys(packageJson.peerDependencies)],
     // },
+    rollupOptions: {
+      external: ['react', 'react-dom', 'classnames'],
+      output: {
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM',
+          'classnames': 'classNames',
+        },
+      },
+    },
   }
 })

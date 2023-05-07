@@ -1,4 +1,5 @@
-import Table from "./components/Table";
+// import Table from "./components/Table";
+import Table from "react-bootstrap-vue-table"
 
 function App() {
   type items = {
@@ -13,7 +14,7 @@ function App() {
       label: "My Age",
       sortable: true,
       formatter: (value: string | number): number => {
-        return Number(value) + 1000;
+        return Number(value) + 500;
       },
     },
     {
@@ -24,6 +25,8 @@ function App() {
       },
     },
   ] as any;
+
+
   const items: items[] = [
     {
       isActive: true,
