@@ -1,5 +1,6 @@
-// import Table from "./components/Table";
-import Table from "react-bootstrap-vue-table"
+ import Table from "./components/Table";
+// import Table from "react-bootstrap-vue-table"
+// import "react-bootstrap-vue-table/dist/style.css"
 
 function App() {
   type items = {
@@ -52,7 +53,7 @@ function App() {
           TableBusy={<h1 className="text-center">Loading</h1>}
           busy={false}
           hover
-          striped
+          small
           bordered
           fields={fields}
           items={items}

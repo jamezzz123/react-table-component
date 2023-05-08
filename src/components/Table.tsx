@@ -179,7 +179,7 @@ export default function Table({
           "table-striped": striped,
           "table-dark": dark,
           "table-bordered": bordered,
-          "table-small": small,
+          "table-sm": small,
         })}
       >
         <thead>
