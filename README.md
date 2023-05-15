@@ -17,6 +17,7 @@ To use the `Table` component, import it from the package:
 
 ```jsx
 import Table from "react-table-component";
+import "react-bootstrap-vue-table/dist/style.css"
 ```
 
 Then, you can use the `Table` component in your React application like this:

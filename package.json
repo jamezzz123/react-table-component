@@ -1,8 +1,8 @@
 {
-  "name": "react-table-component",
+  "name": "lightweight-react-table-component",
   "description": "A simple table component in react inspired by bootstrapVue table component, using bootstrap css",
   "private": false,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "keywords": [
     "react",
     "components",
@@ -10,6 +10,10 @@
     "table",
     "vue"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jamezzz123/react-table-component"
+  },
   "type": "module",
   "author": {
     "name": "James Chinwokwu",
